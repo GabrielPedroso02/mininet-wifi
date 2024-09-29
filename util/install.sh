@@ -708,14 +708,14 @@ function modprobe {
 
 # Script for installing wmediumd from git to /usr/bin/wmediumd
 function wmediumd {
-    echo "Installing wmediumd sources into $BUILD_DIR/wmediumd"
+    echo "Installing wmediumd fork into $BUILD_DIR/wmediumd"
     cd $BUILD_DIR
     if [ -d wmediumd ]; then
       echo "Removing wmediumd..."
       rm -r wmediumd
     fi
     $install git make libevent-dev libconfig-dev libnl-3-dev libnl-genl-3-dev
-    git clone --depth=1 -b mininet-wifi https://github.com/ramonfontes/wmediumd.git
+    git clone --depth=1 -b mininet-wifi https://github.com/GabrielPedroso02/wmediumd.git
     pushd $BUILD_DIR/wmediumd
     sudo make install
     popd

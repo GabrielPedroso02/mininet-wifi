@@ -153,6 +153,10 @@ class set_interference(object):
             configstr += ');\n\tmodel_name = "log_normal_shadowing";' \
                          '\n\tpath_loss_exp = %.1f;\n\tsL = %d;\n};' \
                          % (ppm.exp, ppm.sL)
+        elif ppm.model == 'weissberger':
+            configstr += ');\n\tmodel_name = "weissberger";' \
+                         '\n\tpath_loss_exp = %.1f;\n\txg = 0.0;\n\tdepth = %.1f;\n};' \
+                         % (ppm.exp, ppm.depth)
         else:
             configstr += ');\n\tmodel_name = "free_space";\n\tsL = %d;\n};' \
                          % ppm.sL

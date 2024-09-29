@@ -27,6 +27,8 @@ class PropagationModel(object):
     noise_th = -91
     cca_threshold = -90
 
+    depth = 0 #vegetation depth
+
     def __init__(self, intf, apintf, dist=0):
         if self.model in dir(self):
             self.__getattribute__(self.model)(intf, apintf, dist)
@@ -178,6 +180,18 @@ class PropagationModel(object):
 
         return self.rssi
 
+    def weissberger(self, intf, ap_intf, dist):
+        curr_rssi = logDistance(intf, ap_intf, dist)
+
+        if (0 < self.depth <= 14):
+            weissbLoss = 0.45 * self.depth * (intf.freq **0.284)
+        elif(14 < self.depth <= 400):
+            weissbLoss = 1.33 * (self.depth **0.588) * (intf.freq **0.284)
+
+        self.rssi = curr_rssi - weissbLoss
+
+        return self.rssi
+
 
 ppm = PropagationModel
 
@@ -296,6 +310,29 @@ class SetSignalRange(object):
 
         self.range = math.pow(10, ((-ppm.noise_th + gains -
                                     20 * math.log10(f) - lF * nFloors + 28)/N))
+        return self.range
+
+    def weissberger(self, intf):
+        """Weissberger Propagation Loss Model:
+        Adds vegetation attenuation to the basic Log Distance Propagation Loss
+        ref_d (m): The reference distance (usually 1 meter)
+        exponent: Path Loss exponent, typically 2 for free space propagation
+        """
+        txpower = int(intf.txpower)
+        gain = int(intf.antennaGain)
+        gains = txpower + (gain * 2)  # Total gains from both antennas (Tx + Rx)
+        ref_d = 1
+
+        # Calculate path loss at reference distance (free-space)
+        pl = self.path_loss(intf, ref_d)
+       
+        veg_depth = 400  # Assuming maximum depth
+        # Calculate vegetation loss
+        veg_loss = 1.33 * (veg_depth ** 0.588) * (intf.freq ** 0.284)
+        
+        # Calculate range incorporating vegetation loss
+        total_loss = pl + veg_loss
+        self.range = math.pow(10, ((-ppm.noise_th - total_loss + gains) / (10 * ppm.exp))) * ref_d
         return self.range
 
 
@@ -425,4 +462,17 @@ class GetPowerGivenRange(object):
                        20 * math.log10(f) + lF * nFloors - 28 - (gain * 2)
         if self.txpower < 0: self.txpower = 1
 
+        pldb = 20 * math.log10(f) + N * math.log10(dist) + lF * nFloors - 28
+        self.rssi = gains - int(pldb)
+
+        return self.txpower
+
+    def weissberger(self, intf):
+        logd_txpower = self.logDistance(intf)
+
+        veg_depth = 400  # Assuming maximum depth
+        # Calculate vegetation loss (Weissberger model)
+        veg_loss = 1.33 * (veg_depth ** 0.588) * (intf.freq ** 0.284)
+
+        self.txpower = logd_txpower + veg_loss
         return self.txpower

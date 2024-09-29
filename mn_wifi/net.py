@@ -97,6 +97,9 @@ class Mininet_wifi(Mininet, Mininet_IoT, Mininet_WWAN, Mininet_btvirt):
            rec_rssi: sends rssi to mac80211_hwsim by using hwsim_mgmt
            json_file: json file dir - useful for P4
            ac_method: association control method"""
+
+        print("*** Using Modified version of Mininet-Wifi")
+
         self.station = station
         self.accessPoint = accessPoint
         self.car = car
