@@ -161,6 +161,7 @@ class set_interference(object):
             configstr += ');\n\tmodel_name = "free_space";\n\tsL = %d;\n};' \
                          % ppm.sL
         self.configstr = configstr
+        print("*** Wmediumd Configstr:\n", configstr)
         return self.configstr
 
 
