@@ -331,7 +331,7 @@ class SetSignalRange(object):
         veg_loss = 1.33 * (veg_depth ** 0.588) * (intf.freq ** 0.284)
         
         # Calculate range incorporating vegetation loss
-        total_loss = pl + veg_loss
+        total_loss = pl
         self.range = math.pow(10, ((-ppm.noise_th - total_loss + gains) / (10 * ppm.exp))) * ref_d
         return self.range
 
@@ -470,9 +470,9 @@ class GetPowerGivenRange(object):
     def weissberger(self, intf):
         logd_txpower = self.logDistance(intf)
 
-        veg_depth = 400  # Assuming maximum depth
+        # veg_depth = 400  # Assuming maximum depth
         # Calculate vegetation loss (Weissberger model)
-        veg_loss = 1.33 * (veg_depth ** 0.588) * (intf.freq ** 0.284)
+        # veg_loss = 1.33 * (veg_depth ** 0.588) * (intf.freq ** 0.284)
 
-        self.txpower = logd_txpower + veg_loss
+        self.txpower = logd_txpower
         return self.txpower
