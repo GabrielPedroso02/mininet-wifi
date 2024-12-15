@@ -98,7 +98,7 @@ class Mininet_wifi(Mininet, Mininet_IoT, Mininet_WWAN, Mininet_btvirt):
            json_file: json file dir - useful for P4
            ac_method: association control method"""
 
-        print("*** Using Modified version of Mininet-Wifi")
+        print("*** Using Modified Version 2 of Mininet-Wifi")
 
         self.station = station
         self.accessPoint = accessPoint

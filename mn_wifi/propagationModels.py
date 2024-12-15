@@ -27,8 +27,6 @@ class PropagationModel(object):
     noise_th = -91
     cca_threshold = -90
 
-    depth = 0 #vegetation depth
-
     def __init__(self, intf, apintf, dist=0):
         if self.model in dir(self):
             self.__getattribute__(self.model)(intf, apintf, dist)
@@ -318,22 +316,7 @@ class SetSignalRange(object):
         ref_d (m): The reference distance (usually 1 meter)
         exponent: Path Loss exponent, typically 2 for free space propagation
         """
-        txpower = int(intf.txpower)
-        gain = int(intf.antennaGain)
-        gains = txpower + (gain * 2)  # Total gains from both antennas (Tx + Rx)
-        ref_d = 1
-
-        # Calculate path loss at reference distance (free-space)
-        pl = self.path_loss(intf, ref_d)
-       
-        veg_depth = 400  # Assuming maximum depth
-        # Calculate vegetation loss
-        veg_loss = 1.33 * (veg_depth ** 0.588) * (intf.freq ** 0.284)
-        
-        # Calculate range incorporating vegetation loss
-        total_loss = pl
-        self.range = math.pow(10, ((-ppm.noise_th - total_loss + gains) / (10 * ppm.exp))) * ref_d
-        return self.range
+        return self.logDistance(intf)
 
 
 class GetPowerGivenRange(object):
@@ -468,11 +451,4 @@ class GetPowerGivenRange(object):
         return self.txpower
 
     def weissberger(self, intf):
-        logd_txpower = self.logDistance(intf)
-
-        # veg_depth = 400  # Assuming maximum depth
-        # Calculate vegetation loss (Weissberger model)
-        # veg_loss = 1.33 * (veg_depth ** 0.588) * (intf.freq ** 0.284)
-
-        self.txpower = logd_txpower
-        return self.txpower
+        return self.logDistance(intf)
