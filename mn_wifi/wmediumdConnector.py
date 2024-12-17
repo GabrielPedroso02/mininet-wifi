@@ -155,8 +155,8 @@ class set_interference(object):
                          % (ppm.exp, ppm.sL)
         elif ppm.model == 'weissberger':
             configstr += ');\n\tmodel_name = "weissberger";' \
-                         '\n\tpath_loss_exp = %.1f;\n\txg = 0.0;\n\tvegetation_matrix_file = "%s";\n\tmatrix_size = %d;\n};' \
-                         % (ppm.exp, ppm.vegetation_matrix_file, ppm.matrix_size)
+                         '\n\tpath_loss_exp = %.1f;\n\txg = 0.0;\n\tvegetation_matrix_file = "%s";\n};' \
+                         % (ppm.exp, ppm.vegetation_matrix_file)
         else:
             configstr += ');\n\tmodel_name = "free_space";\n\tsL = %d;\n};' \
                          % ppm.sL
