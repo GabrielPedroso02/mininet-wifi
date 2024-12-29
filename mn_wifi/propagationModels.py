@@ -311,11 +311,6 @@ class SetSignalRange(object):
         return self.range
 
     def weissberger(self, intf):
-        """Weissberger Propagation Loss Model:
-        Adds vegetation attenuation to the basic Log Distance Propagation Loss
-        ref_d (m): The reference distance (usually 1 meter)
-        exponent: Path Loss exponent, typically 2 for free space propagation
-        """
         return self.logDistance(intf)
 
 
